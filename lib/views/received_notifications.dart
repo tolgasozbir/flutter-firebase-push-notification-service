@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_push_notification_service/model/notification_model.dart';
 import 'package:firebase_push_notification_service/services/firebase_manager.dart';
@@ -32,6 +31,7 @@ class _ReceivedNotificationsState extends State<ReceivedNotifications> {
 
   getNotificationList() async {
     notificationList = await FirebaseManager.getAllNotificationMessages();
+    //notificationList.sort((a, b) => a.createdOn!.compareTo(b.createdOn!));
     setState(() {});
   }
 
@@ -69,23 +69,9 @@ class _ReceivedNotificationsState extends State<ReceivedNotifications> {
           title: notification.title,
           body: notification.body,
         );
+        getNotificationList();
       }
     });
-  }
-
-  void getUser() async {
-    //final userDoc = FirebaseFirestore.instance.collection("Users").snapshots().map((e) => e.docs.map((doc) => doc.data())).toList();
-    final userDoc = await FirebaseFirestore.instance.collection("Users").get();
-    var i = 0;
-    for (var item in userDoc.docs) {
-      print("Token Count : ${i++}");
-      print(item["token"]);
-      tokenList.add(item["token"]);
-    }
-    if (!tokenList.contains(token)) {
-      FirebaseManager.createUser(token);
-      tokenList.add(token);
-    }
   }
 
   @override
@@ -117,15 +103,15 @@ class _ReceivedNotificationsState extends State<ReceivedNotifications> {
           return notification.senderToken != token 
           ? Card(
             child: ListTile(
-              title: Text("Message : ${notification.message}"),
-              subtitle: Text("Date ${notification.date}"),
+              title: Text("${notification.message}"),
+              subtitle: Text("${notification.createdOn.toDate().toString().substring(0,19)}"),
             ),
           )
           : Card(
             child: ListTile(
-              tileColor: Colors.blue,
-              title: Text("Message : ${notification.message}", textAlign: TextAlign.right,),
-              subtitle: Text("Date ${notification.date}", textAlign: TextAlign.right,),
+              tileColor: Color.fromARGB(255, 128, 192, 240),
+              title: Text("${notification.message}", textAlign: TextAlign.right,),
+              subtitle: Text("${notification.createdOn.toDate().toString().substring(0,19)}", textAlign: TextAlign.right,),
             ),
           ); 
         },

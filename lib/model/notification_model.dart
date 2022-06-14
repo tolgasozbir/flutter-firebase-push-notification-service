@@ -1,13 +1,13 @@
 class NotificationModel {
-  String? date;
+  var createdOn;
   String? message;
   String? title;
   String? senderToken;
 
-  NotificationModel({this.date, this.message, this.title, this.senderToken});
+  NotificationModel({this.createdOn, this.message, this.title, this.senderToken});
 
   NotificationModel.fromJson(Map<String, dynamic> json) {
-    date = json["date"];
+    createdOn = json["createdOn"];
     message = json['message'];
     title = json['title'];
     senderToken = json['senderToken'];
@@ -15,7 +15,7 @@ class NotificationModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['date'] = this.date;
+    data['date'] = this.createdOn;
     data['message'] = this.message;
     data['title'] = this.title;
     data['senderToken'] = this.senderToken;

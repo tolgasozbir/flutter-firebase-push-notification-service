@@ -18,8 +18,8 @@ class FirebaseManager {
   static void createSaveNotifications(String token, String title, String body) async {
     final notificationDoc = FirebaseFirestore.instance.collection("Notifications").doc();
     final notification = {
-      "date":"${DateTime.now().toString().substring(0,19)}",
-      "senderToken":"$token",
+      "createdOn" : FieldValue.serverTimestamp(),
+      "senderToken" : "$token",
       "title" : "$title",
       "message" : "$body"
     };
@@ -27,7 +27,7 @@ class FirebaseManager {
   }
 
   static Future<List<NotificationModel>> getAllNotificationMessages() async {
-    final notificationDoc = await FirebaseFirestore.instance.collection("Notifications").orderBy("date").get();
+    final notificationDoc = await FirebaseFirestore.instance.collection("Notifications").orderBy("createdOn").get();
     List<NotificationModel> notificationList = [];
     for (var item in notificationDoc.docs) {
       notificationList.add(NotificationModel.fromJson(item.data()));
